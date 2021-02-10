@@ -1292,7 +1292,9 @@ void loop () {
             NAV_error = NAV_ERROR_NONE;
             if (rcOptions[BOXGPSHOME]) {                                    // RTH has the priotity over everything else
               init_RTH();
-            } else if (rcOptions[BOXGPSHOLD]) {                             //Position hold has priority over mission execution  //But has less priority than RTH
+            } 
+            else if (rcOptions[BOXGPSHOLD]) 
+            {   //Position hold has priority over mission execution  //But has less priority than RTH
               if (f.GPS_mode == GPS_MODE_NAV)
                 NAV_paused_at = mission_step.number;
               f.GPS_mode = GPS_MODE_HOLD;
@@ -1300,13 +1302,17 @@ void loop () {
               GPS_set_next_wp(&GPS_coord[LAT], &GPS_coord[LON],&GPS_coord[LAT], & GPS_coord[LON]); //hold at the current position
               set_new_altitude(alt.EstAlt);                                //and current altitude
               NAV_state = NAV_STATE_HOLD_INFINIT;
-            } else if (rcOptions[BOXLAND]) {                               //Land now (It has priority over Navigation)
+            } 
+            else if (rcOptions[BOXLAND]) 
+            {            //Land now (It has priority over Navigation)
               f.GPS_mode = GPS_MODE_HOLD;
               f.GPS_BARO_MODE = true;
               GPS_set_next_wp(&GPS_coord[LAT], &GPS_coord[LON],&GPS_coord[LAT], & GPS_coord[LON]);
               set_new_altitude(alt.EstAlt);
               NAV_state = NAV_STATE_LAND_START;
-            } else if (rcOptions[BOXGPSNAV]) {                             //Start navigation
+            } 
+            else if (rcOptions[BOXGPSNAV])
+             {                             //Start navigation
               f.GPS_mode = GPS_MODE_NAV;                                   //Nav mode start
               f.GPS_BARO_MODE = true;
               GPS_prev[LAT] = GPS_coord[LAT];
