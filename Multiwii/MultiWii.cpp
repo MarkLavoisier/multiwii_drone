@@ -1288,7 +1288,8 @@ void loop () {
 		//TODO: 구현 f.GPS_Trusted 플래그, Dramida의 아이디어 - HDOP 성능 저하 및 갑작스러운 속도 상승 확인
       if (f.GPS_FIX) {
         if (GPS_numSat >5 ) {
-          if (prv_gps_modes != gps_modes_check) {                           //Check for change since last loop
+          if (prv_gps_modes != gps_modes_check) 
+		  {                           //Check for change since last loop
             NAV_error = NAV_ERROR_NONE;
             if (rcOptions[BOXGPSHOME]) {                                    // RTH has the priotity over everything else
               init_RTH();
@@ -1312,7 +1313,7 @@ void loop () {
               NAV_state = NAV_STATE_LAND_START;
             } 
             else if (rcOptions[BOXGPSNAV])
-             {                             //Start navigation
+            {                             //Start navigation
               f.GPS_mode = GPS_MODE_NAV;                                   //Nav mode start
               f.GPS_BARO_MODE = true;
               GPS_prev[LAT] = GPS_coord[LAT];
@@ -1320,12 +1321,16 @@ void loop () {
               if (NAV_paused_at != 0) {
                 next_step = NAV_paused_at;
                 NAV_paused_at = 0;                                         //Clear paused step 
-              } else {
+              } 
+			  else 
+			  {
                 next_step = 1;
                 jump_times = -10;                                          //Reset jump counter
               }
               NAV_state = NAV_STATE_PROCESS_NEXT;
-            } else {                                                       //None of the GPS Boxes are switched on
+            }
+			else
+			{                                                       //None of the GPS Boxes are switched on
               f.GPS_mode = GPS_MODE_NONE;
               f.GPS_BARO_MODE = false;
               f.THROTTLE_IGNORED = false;
