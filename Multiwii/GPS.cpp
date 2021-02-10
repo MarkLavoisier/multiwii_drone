@@ -911,9 +911,10 @@ uint8_t hex_c(uint8_t n) {    // convert '0'..'9','A'..'F' to 0..15
   return n;
 } 
 
-//************************************************************************
+
 // Common GPS functions 
 //
+//rtl
 void init_RTH() {
   f.GPS_mode = GPS_MODE_RTH;           // Set GPS_mode to RTH
   f.GPS_BARO_MODE = true;
