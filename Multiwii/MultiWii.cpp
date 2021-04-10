@@ -1291,7 +1291,8 @@ void loop () {
           if (prv_gps_modes != gps_modes_check) 
 		  {                           //Check for change since last loop
             NAV_error = NAV_ERROR_NONE;
-            if (rcOptions[BOXGPSHOME]) {                                    // RTH has the priotity over everything else
+            if (rcOptions[BOXGPSHOME]) 
+            {                                    // RTH has the priotity over everything else
               init_RTH();
             } 
             else if (rcOptions[BOXGPSHOLD]) 
@@ -1322,8 +1323,8 @@ void loop () {
                 next_step = NAV_paused_at;
                 NAV_paused_at = 0;                                         //Clear paused step 
               } 
-			  else 
-			  {
+      			  else 
+			        {
                 next_step = 1;
                 jump_times = -10;                                          //Reset jump counter
               }
@@ -1341,8 +1342,20 @@ void loop () {
             }
             prv_gps_modes = gps_modes_check;
           }
-        } 
-		//numSat>5 
+         
+          #if defined(LOITER)
+           //////////////////////////////////// gp-jin-2017-12-20
+          // make gpsgold like loiter by gp
+          if (rcOptions[BOXGPSHOLD]) {
+            if (abs(rcCommand[ROLL])< AP_MODE && abs(rcCommand[PITCH]) < AP_MODE) {
+                GPS_hold[LAT] = GPS_coord[LAT];
+                GPS_hold[LON] = GPS_coord[LON];             
+                GPS_set_next_wp(&GPS_hold[LAT],&GPS_hold[LON], &GPS_hold[LAT],&GPS_hold[LON]);
+            }
+          }
+          //////////////////////////////////
+          #endif
+	}	//numSat>5 
 		else
 		{ 
           //numSat dropped below 5 during navigation

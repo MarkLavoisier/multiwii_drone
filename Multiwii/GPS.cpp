@@ -915,7 +915,7 @@ uint8_t hex_c(uint8_t n) {    // convert '0'..'9','A'..'F' to 0..15
 // Common GPS functions 
 //
 //rtl
-void init_RTH() {
+void init_RTH() { //initialize
   f.GPS_mode = GPS_MODE_RTH;           // Set GPS_mode to RTH
   f.GPS_BARO_MODE = true;
   GPS_hold[LAT] = GPS_coord[LAT];      //All RTH starts with a poshold 
