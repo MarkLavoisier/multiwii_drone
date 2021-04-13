@@ -796,7 +796,7 @@ void go_arm() {
     ) 
   {
     if(!f.ARMED && !f.BARO_MODE) // 아밍 상태가 아니고 바로 모드가 아닐 경우
-	{ // arm now!
+  	{ // arm now!
       f.ARMED = 1;//무장 
       #if defined(HEADFREE)
         headFreeModeHold = att.heading;
@@ -924,7 +924,8 @@ void loop () {
       }
       failsafeCnt++;
       */
-      if ( (GPS_numSat<5) || !f.GPS_FIX || !failsafe_nav ) {
+      if ( (GPS_numSat<5) || !f.GPS_FIX || !failsafe_nav ) 
+      {
         if ( failsafeCnt > (5*FAILSAFE_DELAY) && f.ARMED){
           for(i=0; i<3; i++) rcData[i] = MIDRC;
           rcData[THROTTLE] = conf.failsafe_throttle;
@@ -1286,16 +1287,17 @@ void loop () {
     if (f.ARMED ) {                       
       //TODO: implement f.GPS_Trusted flag, idea from Dramida - Check for degraded HDOP and sudden speed jumps
 		//TODO: 구현 f.GPS_Trusted 플래그, Dramida의 아이디어 - HDOP 성능 저하 및 갑작스러운 속도 상승 확인
-      if (f.GPS_FIX) {
-        if (GPS_numSat >5 ) {
+      if (f.GPS_FIX) { // gps 잡혀있을 때
+        if (GPS_numSat >5 )  //위성 갯수가 5개 이상일 때
+        {
           if (prv_gps_modes != gps_modes_check) 
-		  {                           //Check for change since last loop
+		      {                  //Check for change since last loop
             NAV_error = NAV_ERROR_NONE;
-            if (rcOptions[BOXGPSHOME]) 
+            if (rcOptions[BOXGPSHOME]) //리턴 투 홈
             {                                    // RTH has the priotity over everything else
               init_RTH();
             } 
-            else if (rcOptions[BOXGPSHOLD]) 
+            else if (rcOptions[BOXGPSHOLD])//좌표모드 
             {   //Position hold has priority over mission execution  //But has less priority than RTH
               if (f.GPS_mode == GPS_MODE_NAV)
                 NAV_paused_at = mission_step.number;
@@ -1305,7 +1307,7 @@ void loop () {
               set_new_altitude(alt.EstAlt);                                //and current altitude
               NAV_state = NAV_STATE_HOLD_INFINIT;
             } 
-            else if (rcOptions[BOXLAND]) 
+            else if (rcOptions[BOXLAND])//랜딩모드
             {            //Land now (It has priority over Navigation)
               f.GPS_mode = GPS_MODE_HOLD;
               f.GPS_BARO_MODE = true;
@@ -1313,7 +1315,7 @@ void loop () {
               set_new_altitude(alt.EstAlt);
               NAV_state = NAV_STATE_LAND_START;
             } 
-            else if (rcOptions[BOXGPSNAV])
+            else if (rcOptions[BOXGPSNAV])//미션모드
             {                             //Start navigation
               f.GPS_mode = GPS_MODE_NAV;                                   //Nav mode start
               f.GPS_BARO_MODE = true;
@@ -1330,8 +1332,8 @@ void loop () {
               }
               NAV_state = NAV_STATE_PROCESS_NEXT;
             }
-			else
-			{                                                       //None of the GPS Boxes are switched on
+			      else
+            {         //None of the GPS Boxes are switched on
               f.GPS_mode = GPS_MODE_NONE;
               f.GPS_BARO_MODE = false;
               f.THROTTLE_IGNORED = false;
@@ -1355,9 +1357,9 @@ void loop () {
           }
           //////////////////////////////////
           #endif
-	}	//numSat>5 
-		else
-		{ 
+	      }	//numSat>5 
+	    	else
+	    	{ 
           //numSat dropped below 5 during navigation
 			//탐색 중 numSat이 5 아래로 떨어짐
           if (f.GPS_mode == GPS_MODE_NAV) 
@@ -1370,7 +1372,7 @@ void loop () {
             prv_gps_modes = 0xff;                                          //invalidates mode check, to allow re evaluate rcOptions when numsats raised again
           }
           if (f.GPS_mode == GPS_MODE_HOLD || f.GPS_mode == GPS_MODE_RTH) 
-		  {
+		       {
             f.GPS_mode = GPS_MODE_NONE;
             NAV_state = NAV_STATE_NONE;
             NAV_error = NAV_ERROR_SPOILED_GPS;
@@ -1379,11 +1381,11 @@ void loop () {
           nav[0] = 0; nav[1] = 0;
         }
       } 
-	  //f.GPS_FIX
-	  else 
-	  { 
+	     //f.GPS_FIX
+	     else 
+	    { 
         // GPS Fix dissapeared, very unlikely that we will be able to regain it, abort mission
-		  //GPS 수정은 사라졌고, 우리가 그것을 되찾을 수 있을 것 같지 않고, 임무를 중단한다.
+  		  //GPS 수정은 사라졌고, 우리가 그것을 되찾을 수 있을 것 같지 않고, 임무를 중단한다.
         f.GPS_mode = GPS_MODE_NONE;
         NAV_state = NAV_STATE_NONE;
         NAV_paused_at = 0;
@@ -1393,8 +1395,8 @@ void loop () {
 																			//고정을 되찾을 때 미션을 다시 시작할 수 있는 기회 제공
       }
     } 
-	else 
-	{ 
+  	else 
+  	{ 
 		//copter is armed
       //copter is disarmed
       f.GPS_mode = GPS_MODE_NONE;
