@@ -915,7 +915,7 @@ uint8_t hex_c(uint8_t n) {    // convert '0'..'9','A'..'F' to 0..15
 // Common GPS functions 
 //
 //rtl
-void init_RTH() { //initialize
+void init_RTH() { //initialize Return to home
   f.GPS_mode = GPS_MODE_RTH;           // Set GPS_mode to RTH
   f.GPS_BARO_MODE = true;
   GPS_hold[LAT] = GPS_coord[LAT];      //All RTH starts with a poshold 
@@ -923,7 +923,8 @@ void init_RTH() { //initialize
   GPS_set_next_wp(&GPS_hold[LAT],&GPS_hold[LON], &GPS_hold[LAT], &GPS_hold[LON]);
   NAV_paused_at = 0;
   if (GPS_conf.rth_altitude == 0) set_new_altitude(alt.EstAlt);     //Return at actual altitude
-  else {                                                            // RTH altitude is defined, but we use it only if we are below it
+  else 
+  {                                                            // RTH altitude is defined, but we use it only if we are below it
     if (alt.EstAlt < GPS_conf.rth_altitude * 100) 
       set_new_altitude(GPS_conf.rth_altitude * 100);
     else set_new_altitude(alt.EstAlt);

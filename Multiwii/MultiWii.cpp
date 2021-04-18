@@ -1321,7 +1321,8 @@ void loop () {
               f.GPS_BARO_MODE = true;
               GPS_prev[LAT] = GPS_coord[LAT];
               GPS_prev[LON] = GPS_coord[LON];
-              if (NAV_paused_at != 0) {
+              if (NAV_paused_at != 0) 
+              {
                 next_step = NAV_paused_at;
                 NAV_paused_at = 0;                                         //Clear paused step 
               } 
@@ -1356,7 +1357,7 @@ void loop () {
             }
           }
           //////////////////////////////////
-          #endif
+          #endif //like loiter mode
 	      }	//numSat>5 
 	    	else
 	    	{ 

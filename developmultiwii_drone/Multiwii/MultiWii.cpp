@@ -884,18 +884,19 @@ void loop () {
   static int32_t errorGyroI_YAW;
   static int16_t delta1[2],delta2[2];
   static int16_t errorGyroI[2] = {0,0};
+  //  erase - 1
   #elif PID_CONTROLLER == 2
   static int16_t delta1[3],delta2[3];
   static int32_t errorGyroI[3] = {0,0,0};
   static int16_t lastError[3] = {0,0,0};
   int16_t deltaSum;
   int16_t AngleRateTmp, RateError;
-  #endif
+  #endif  
   static uint16_t rcTime  = 0;
   static int16_t initialThrottleHold;
   int16_t rc;
   int32_t prop = 0;
-
+//  erase - 2
   #if defined(SERIAL_RX)
     if (spekFrameFlags == 0x01) readSerial_RX();
   #endif
@@ -989,6 +990,7 @@ void loop () {
         errorGyroI[ROLL] = 0; errorGyroI[PITCH] = 0;
         #if PID_CONTROLLER == 1
           errorGyroI_YAW = 0;
+          //  erase - 3
         #elif PID_CONTROLLER == 2
           errorGyroI[YAW] = 0;
         #endif
@@ -996,10 +998,10 @@ void loop () {
       #endif
 		if (conf.activate[BOXARM] > 0)  // Arming/Disarming via ARM BOX(ARM BOX를 통한 무장/해제)
 		{            
-			if (rcOptions[BOXARM] && f.OK_TO_ARM) { go_arm(); }//안전 상태라면 무장 설정
-			else if (f.ARMED){ go_disarm();}//아밍 상태라면 무장 해제
-      }
+			if (rcOptions[BOXARM] && f.OK_TO_ARM) { go_arm();   }//안전 상태라면 무장 설정
+			else if (f.ARMED)                     { go_disarm();}//아밍 상태라면 무장 해제
     }
+  }
 
     if(rcDelayCommand == 20) 
   	{
@@ -1371,7 +1373,7 @@ void loop () {
           }
          
           #if defined(LOITER)
-           //////////////////////////////////// gp-jin-2017-12-20
+           //////////////////////////////
           // make gpsgold like loiter by gp
           if (rcOptions[BOXGPSHOLD]) {
             if (abs(rcCommand[ROLL])< AP_MODE && abs(rcCommand[PITCH]) < AP_MODE) {
