@@ -10,6 +10,10 @@ March  2015     V2.4
 
 #include <avr/io.h>
 
+#include<stdio.h>
+#include<stdint.h>
+
+
 #include "Arduino.h"
 #include "config.h"
 #include "def.h"
@@ -158,10 +162,10 @@ uint32_t currentTime = 0;
 uint16_t previousTime = 0;
 uint16_t cycleTime = 0;     // this is the number in micro second to achieve a full loop, it can differ a little and is taken into account in the PID loop
 								//이 숫자는 전체 루프를 달성하기 위한 마이크로초 단위로, 약간 다를 수 있으며 PID 루프에서 고려된다.
-uint16_t calibratingA = 0;  // the calibration is done in the main loop. Calibrating decreases at each cycle down to 0, then we enter in a normal mode.
+uint16_t calibratingA = 0;  // acc. the calibration is done in the main loop. Calibrating decreases at each cycle down to 0, then we enter in a normal mode.
 								//교정은 메인 루프에서 수행된다. 각 사이클에서 교정이 0으로 감소하면 정상 모드로 진입한다.
-uint16_t calibratingB = 0;  // baro calibration = get new ground pressure value(baro 교정 = 새로운 접지 압력 값 가져오기)
-uint16_t calibratingG;
+uint16_t calibratingB = 0;  // baro.  calibration = get new ground pressure value(baro 교정 = 새로운 접지 압력 값 가져오기)
+uint16_t calibratingG;  //gyro
 int16_t  magHold,headFreeModeHold; // [-180;+180]
 uint8_t  vbatMin = VBATNOMINAL;  // lowest battery voltage in 0.1V steps
 uint8_t  rcOptions[CHECKBOXITEMS];
@@ -871,9 +875,9 @@ void go_disarm() {
 // ******** Main Loop *********
 void loop () {
   static uint8_t rcDelayCommand; // this indicates the number of time (multiple of RC measurement at 50Hz) the sticks must be maintained to run or switch off motors
-								//이는 모터의 작동 또는 끄기 위해 스틱이 유지되어야 하는 시간(50Hz에서 RC 측정의 배수)을 나타낸다.
+						                  		//이는 모터의 작동 또는 끄기 위해 스틱이 유지되어야 하는 시간(50Hz에서 RC 측정의 배수)을 나타낸다.
   static uint8_t rcSticks;       // this hold sticks position for command combos
-								 //이것은 명령 콤보를 위한 고정 스틱 위치
+							                  	 //이것은 명령 콤보를 위한 고정 스틱 위치
   uint8_t axis,i;
   int16_t error,errorAngle;
   int16_t delta;
@@ -884,7 +888,6 @@ void loop () {
   static int32_t errorGyroI_YAW;
   static int16_t delta1[2],delta2[2];
   static int16_t errorGyroI[2] = {0,0};
-  //  erase - 1
   #elif PID_CONTROLLER == 2
   static int16_t delta1[3],delta2[3];
   static int32_t errorGyroI[3] = {0,0,0};
@@ -941,26 +944,29 @@ void loop () {
       */
       if ( (GPS_numSat<5) || !f.GPS_FIX || !failsafe_nav ) 
       {
-        if ( failsafeCnt > (5*FAILSAFE_DELAY) && f.ARMED){
+        if ( failsafeCnt > (5*FAILSAFE_DELAY) && f.ARMED)
+        {
           for(i=0; i<3; i++) rcData[i] = MIDRC;
           rcData[THROTTLE] = conf.failsafe_throttle;
-          if (failsafeCnt > 5*(FAILSAFE_DELAY+FAILSAFE_OFF_DELAY)){
+          if (failsafeCnt > 5*(FAILSAFE_DELAY+FAILSAFE_OFF_DELAY))
+          {
             go_disarm();
             f.OK_TO_ARM = 0;
           }
           failsafeEvents++;
         }
-        if ( failsafeCnt > (5*FAILSAFE_DELAY) && !f.ARMED){
+        if ( failsafeCnt > (5*FAILSAFE_DELAY) && !f.ARMED)
+        {
           go_disarm();
           f.OK_TO_ARM=0; 
         }
         failsafeCnt++;
       }      
     #endif
-    // end of failsafe routine - next change is made with RcOptions setting
+     /* end of failsafe routine - next change is made with RcOptions setting
 	  //Failsafe 루틴 종료 - 다음 변경은 RcOptions 설정으로 수행됨
 
-	  /*
+	 
 	  failsafe
 	  1.stop(disarm)
 	  2.rtl
@@ -972,14 +978,17 @@ void loop () {
     // ------------------ STICKS COMMAND HANDLER --------------------
     // checking sticks positions(스틱의 위치 확인)
     uint8_t stTmp = 0;
-    for(i=0;i<4;i++) {
+    for(i=0;i<4;i++) 
+    {
       stTmp >>= 2;
       if(rcData[i] > MINCHECK) stTmp |= 0x80;      // check for MIN(최소 확인)
       if(rcData[i] < MAXCHECK) stTmp |= 0x40;      // check for MAX(최대 확인)
     }
-    if(stTmp == rcSticks) {
+    if(stTmp == rcSticks) 
+    {
       if(rcDelayCommand<250) rcDelayCommand++;
-    } else rcDelayCommand = 0;
+    } 
+    else rcDelayCommand = 0;
     rcSticks = stTmp;
     
     // perform actions    
@@ -990,7 +999,6 @@ void loop () {
         errorGyroI[ROLL] = 0; errorGyroI[PITCH] = 0;
         #if PID_CONTROLLER == 1
           errorGyroI_YAW = 0;
-          //  erase - 3
         #elif PID_CONTROLLER == 2
           errorGyroI[YAW] = 0;
         #endif
@@ -998,8 +1006,8 @@ void loop () {
       #endif
 		if (conf.activate[BOXARM] > 0)  // Arming/Disarming via ARM BOX(ARM BOX를 통한 무장/해제)
 		{            
-			if (rcOptions[BOXARM] && f.OK_TO_ARM) { go_arm();   }//안전 상태라면 무장 설정
-			else if (f.ARMED)                     { go_disarm();}//아밍 상태라면 무장 해제
+			if (rcOptions[BOXARM] && f.OK_TO_ARM) { go_arm();   } //안전 상태라면 무장 설정
+			else if (f.ARMED)                     { go_disarm();} //아밍 상태라면 무장 해제
     }
   }
 
@@ -1020,7 +1028,7 @@ void loop () {
 	  {                        
         i=0;
 		//mode 1 ?
-		// GYRO calibration(자이로 교정)
+		// GYRO calibration(자이로 교정),GPS reset, calibration Baro
         if (rcSticks == THR_LO + YAW_LO + PIT_LO + ROL_CE) 
 	    	{    // GYRO calibration(자이로 교정)
           calibratingG=512;
@@ -1102,7 +1110,8 @@ void loop () {
         else if (rcSticks == THR_HI + YAW_CE + PIT_LO + ROL_CE) {conf.angleTrim[PITCH]-=2; i=1;}
         else if (rcSticks == THR_HI + YAW_CE + PIT_CE + ROL_HI) {conf.angleTrim[ROLL] +=2; i=1;}
         else if (rcSticks == THR_HI + YAW_CE + PIT_CE + ROL_LO) {conf.angleTrim[ROLL] -=2; i=1;}
-        if (i) {
+        if (i) 
+        {
           writeParams(1);
           rcDelayCommand = 0;    // allow autorepetition(자동 회생을 허용하다)
           #if defined(LED_RING)
@@ -1152,7 +1161,7 @@ void loop () {
     // note: if FAILSAFE is disable, failsafeCnt > 5*FAILSAFE_DELAY is always false
 	//FAILSAFE가 비활성화되면 FAILAFECnt > 5*FAILSAFE_DELay는 항상 False이다.
     #if ACC
-      if ( rcOptions[BOXANGLE] || (failsafeCnt > 5*FAILSAFE_DELAY) ) 
+      if ( rcOptions[BOXANGLE] || ( failsafeCnt > 5 * FAILSAFE_DELAY ) ) 
 	    { 
         // bumpless transfer to Level mode
         if (!f.ANGLE_MODE) 
@@ -1570,7 +1579,7 @@ else
       AltHoldCorr -= GPS_conf.land_speed;
       if(abs(AltHoldCorr) > 512) 
       {
-        AltHold += AltHoldCorr/512;
+        AltHold += AltHoldCorr / 512;
         AltHoldCorr %= 512;
       }
     }

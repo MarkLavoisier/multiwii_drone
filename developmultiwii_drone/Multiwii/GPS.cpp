@@ -359,21 +359,31 @@ uint8_t GPS_Compute(void) {
           GPS_calc_nav_rate(speed);
           GPS_adjust_heading();
 
-          if ((wp_distance <= GPS_conf.wp_radius) || check_missed_wp()) {               //This decides what happen when we reached the WP coordinates 
-            if (mission_step.action == MISSION_LAND) {                                  //Autoland
+          if ((wp_distance <= GPS_conf.wp_radius) || check_missed_wp()) 
+          {               //This decides what happen when we reached the WP coordinates 
+            if (mission_step.action == MISSION_LAND) 
+            {                                  //Autoland
               NAV_state = NAV_STATE_LAND_START;                                         //Start landing
               set_new_altitude(alt.EstAlt);                                             //Stop any altitude changes
-            } else if (mission_step.flag == MISSION_FLAG_END) {                         //If this was the last mission step (flag set by the mission planner), then switch to poshold
+            } 
+            else if (mission_step.flag == MISSION_FLAG_END) 
+            {                         //If this was the last mission step (flag set by the mission planner), then switch to poshold
               NAV_state = NAV_STATE_HOLD_INFINIT;
               NAV_error = NAV_ERROR_FINISH;
-            } else if (mission_step.action == MISSION_HOLD_UNLIM) {                     //If mission_step was POSHOLD_UNLIM and we reached the position then switch to poshold unlimited
+            } 
+            else if (mission_step.action == MISSION_HOLD_UNLIM) 
+            {                     //If mission_step was POSHOLD_UNLIM and we reached the position then switch to poshold unlimited
               NAV_state = NAV_STATE_HOLD_INFINIT;
               NAV_error = NAV_ERROR_FINISH;
-            } else if (mission_step.action == MISSION_HOLD_TIME) {                      //If mission_step was a timed poshold then initiate timed poshold
+            } 
+            else if (mission_step.action == MISSION_HOLD_TIME) 
+            {                      //If mission_step was a timed poshold then initiate timed poshold
               nav_hold_time = mission_step.parameter1;
               nav_timer_stop = 0;                                                       //This indicates that we are starting a timed poshold
               NAV_state = NAV_STATE_HOLD_TIMED;
-            } else {
+            } 
+            else 
+            {
               NAV_state = NAV_STATE_PROCESS_NEXT;                                       //Otherwise process next step
             }
           }
