@@ -1027,7 +1027,6 @@ void loop () {
 	  else 
 	  {                        
         i=0;
-		//mode 1 ?
 		// GYRO calibration(자이로 교정),GPS reset, calibration Baro
         if (rcSticks == THR_LO + YAW_LO + PIT_LO + ROL_CE) 
 	    	{    // GYRO calibration(자이로 교정)
