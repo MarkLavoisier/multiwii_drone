@@ -6,7 +6,7 @@ It's a very complicated code.  But it's a project that has pushed the Arduino bo
 2021 4 11 restart  
 2021 4 11 reboot  
 
-## code solve
+## code solve - ready test
 
 2021-04-12 multiwii.cpp start !
 2021-04-17 GPS.cpp
