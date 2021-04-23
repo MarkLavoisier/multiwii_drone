@@ -1,4 +1,4 @@
-# Multiwii drone with my teacher - auto run
+# Multiwii drone with my teacher  
 
 It is thanks to my teacher who taught me that I can study for this way.
 
