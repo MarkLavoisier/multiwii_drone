@@ -716,7 +716,7 @@ void setup() {
     if(global_conf.currentSet == 0) break;                      // all checks is done(모든 점검이 끝났다.)
     global_conf.currentSet--;                                   // next setting for check(다음 체크 설정)
   }
-  readGlobalSet();                              // reload global settings for get last profile number
+  readGlobalSet();         // reload global settings for get last profile number
 												 //마지막 프로필 번호 가져오기에 대한 전역 설정 다시 로드
   #ifndef NO_FLASH_CHECK
     if(flashsum != global_conf.flashsum) {
@@ -724,7 +724,7 @@ void setup() {
       writeGlobalSet(1);                        // update flash sum in global config
     }
   #endif
-  readEEPROM();                                 // load setting data from last used profile
+  readEEPROM();           // load setting data from last used profile
 												 //마지막으로 사용한 프로필에서 설정 데이터 로드
   blinkLED(2,40,global_conf.currentSet+1);          
 
@@ -749,7 +749,7 @@ void setup() {
   #endif
   calibratingG = 512;
   calibratingB = 200;  // 10 seconds init_delay + 200 * 25 ms = 15 seconds before ground pressure settles
-						  //10초 init_init + 200 * 25ms = 접지 압력이 설정되기 15초 전
+						          //10초 init_init + 200 * 25ms = 접지 압력이 설정되기 15초 전
   #if defined(POWERMETER)
     for(uint8_t j=0; j<=PMOTOR_SUM; j++) pMeter[j]=0;
   #endif
