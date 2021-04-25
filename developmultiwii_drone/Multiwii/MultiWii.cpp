@@ -749,7 +749,7 @@ void setup() {
   #endif
   calibratingG = 512;
   calibratingB = 200;  // 10 seconds init_delay + 200 * 25 ms = 15 seconds before ground pressure settles
-						          //10초 init_init + 200 * 25ms = 접지 압력이 설정되기 15초 전
+						        //10초 init_init + 200 * 25ms = 접지 압력이 설정되기 15초 전
   #if defined(POWERMETER)
     for(uint8_t j=0; j<=PMOTOR_SUM; j++) pMeter[j]=0;
   #endif
