@@ -6,6 +6,10 @@ It's a very complicated code.  But it's a project that has pushed the Arduino bo
 2021 4 11 restart  
 2021 4 11 reboot
 
+## model
+
+<img src="./multiwiiDrone.jpg" height="350px" width="450px">
+
 ## code solve
 
 2021-04-12 multiwii.cpp start !
