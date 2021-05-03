@@ -10,8 +10,8 @@ March  2015     V2.4
 
 #include <avr/io.h>
 
-#include<stdio.h>
-#include<stdint.h>
+//#include<stdio.h>
+//#include<stdint.h>
 
 
 #include "Arduino.h"
